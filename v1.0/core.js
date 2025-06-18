@@ -7,15 +7,15 @@ Object.defineProperty(
     writable: false,
     value: new Proxy(
         {
-            register(package, value) {
-                const [packageName, version] = package.split(/@v/)
+            register(packageLabel, value) {
+                const [packageName, version] = packageLabel.split(/@v/)
                 packages[packageName] = { version, value }
             },
             getPackage(packageName, ...allowedVersions) {
-                const package = packages[packageName]
-                if (!package) throw new Error('Package `' + packageName + '` not found!')
-                if (!allowedVersions.includes(package.version)) throw new Error('Package `' + packageName + '@' + package.version + '` does not match requirements!')
-                return package.value
+                const packageObject = packages[packageName]
+                if (!packageObject) throw new Error('Package `' + packageName + '` not found!')
+                if (!allowedVersions.includes(packageObject.version)) throw new Error('Package `' + packageName + '@' + packageObject.version + '` does not match requirements!')
+                return packageObject.value
             }
         },
         {
